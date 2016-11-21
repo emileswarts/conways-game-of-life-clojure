@@ -10,8 +10,7 @@
   [cell]
   (let [live-neighbor-count (count (filter #(= 1 %) (cell :neighbors)))]
   (cond
-    (= live-neighbor-count 0) :dead
-    (= live-neighbor-count 1) :dead
+    (< live-neighbor-count 2) :dead
     (= live-neighbor-count 2) :alive
     (= live-neighbor-count 3) :alive
     (> live-neighbor-count 3) :dead)))
