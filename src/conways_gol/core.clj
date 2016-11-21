@@ -23,28 +23,20 @@
   [world-dimensions]
   (map (fn [x-row] (hash-map :x x-row)) (take (world-dimensions :x) (range))))
 
-(defn y-rows-from-x-rows
-  [x-row world-dimensions]
-  (fn [x-row]
-    (map
-      (fn [y] (assoc x-row :y y))
-      (take (world-dimensions :y) (range)))))
-
-(defn with-neighbors
-  [cells]
-  cells)
-
 (defn with-existing-cells
   [generated-cells defined-cells]
-  (with-neighbors
-    (map (fn [cell]
-         (if (not= nil #(filter (fn [cell-row] (and (= (cell-row :x) (= (cell-row :y)))) [(cell :x) (cell :y)]) defined-cells))
-               (assoc cell :state (cell :state))
-               (assoc cell :state 0))) defined-cells)))
+    (map (fn [generated-cell]
+           (let [row (#(filter (fn [cell-row] (and
+                                                (= (cell-row :x) (generated-cell :x))
+                                                (= (cell-row :y) (generated-cell :y)))) defined-cells))]
+            (println (flatten row))
+           (if (not (empty? row))
+             (assoc generated-cell :state ((first row) :state))
+             (assoc generated-cell :state 0)))) (flatten generated-cells)))
 
 (defn rendered-world
   [defined-cells world-dimensions]
-  (with-existing-cells (y-rows-from-x-rows (x-rows world-dimensions) world-dimensions) defined-cells))
-
-; (def world-dimensions
-;   {:x 9 :y 9})
+  (with-existing-cells (map (fn [x-row]
+         (map
+           (fn [y] (assoc x-row :y y))
+           (take (world-dimensions :y) (range)))) (x-rows world-dimensions)) defined-cells))
