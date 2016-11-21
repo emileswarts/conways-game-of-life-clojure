@@ -10,7 +10,11 @@
   [cell]
   (let [live-neighbor-count (count (filter #(= 1 %) (cell :neighbors)))]
   (cond
-    (< live-neighbor-count 2) :dead
-    (= live-neighbor-count 2) :alive
-    (= live-neighbor-count 3) :alive
-    (> live-neighbor-count 3) :dead)))
+    (< live-neighbor-count 2) 0
+    (= live-neighbor-count 2) 1
+    (= live-neighbor-count 3) 1
+    (> live-neighbor-count 3) 0)))
+
+(defn tick-cell
+  [cell]
+  (assoc cell :state (cell-state cell)))
