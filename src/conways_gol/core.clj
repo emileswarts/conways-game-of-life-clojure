@@ -29,7 +29,6 @@
            (let [row (#(filter (fn [cell-row] (and
                                                 (= (cell-row :x) (generated-cell :x))
                                                 (= (cell-row :y) (generated-cell :y)))) defined-cells))]
-            (println (flatten row))
            (if (not (empty? row))
              (assoc generated-cell :state ((first row) :state))
              (assoc generated-cell :state 0)))) (flatten generated-cells)))
