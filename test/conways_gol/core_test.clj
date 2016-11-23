@@ -24,3 +24,23 @@
           untouched-cell (some #{{ :x 1 :y 0 :state 0}} (rendered-world cells world-dimensions))]
       (is (= { :x 0 :y 0 :state 1} defined-cell))
       (is (= { :x 1 :y 0 :state 0} untouched-cell)))))
+
+(deftest cell-neighbours-test
+  (testing "3 neighbours"
+    (let [grid [{ :x 0 :y 0 :state 1 }
+                { :x 1 :y 0 :state 1 }
+                { :x 1 :y 1 :state 1 }
+                { :x 0 :y 1 :state 1 }]
+          cell-neighbours [{ :x 1 :y 0 :state 1 }
+                           { :x 1 :y 1 :state 1 }
+                           { :x 0 :y 1 :state 1 }]
+           cell { :x 0 :y 0 :state 1 }]
+    (is (= cell-neighbours (neighbours grid cell))))))
+
+; (deftest cell-state-test
+;   (testing "3 neighbours"
+;     (let [cell-family [{ :x 0 :y 0 :state 1 }
+;                 { :x 1 :y 0 :state 1 }
+;                 { :x 1 :y 1 :state 1 }
+;                 { :x 0 :y 1 :state 1 }]]
+;     (is (= 0 ((mutated-cell cell-family { :x 0 :y 0 :state 1 }) :state))))))

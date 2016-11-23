@@ -26,12 +26,29 @@
 (defn with-existing-cells
   [generated-cells defined-cells]
     (map (fn [generated-cell]
-           (let [row (#(filter (fn [cell-row] (and
-                                                (= (cell-row :x) (generated-cell :x))
-                                                (= (cell-row :y) (generated-cell :y)))) defined-cells))]
+           (let [row (#(filter
+                         (fn [cell-row]
+                                 (and
+                                   (= (cell-row :x) (generated-cell :x))
+                                   (= (cell-row :y) (generated-cell :y)))) defined-cells))]
            (if (not (empty? row))
              (assoc generated-cell :state ((first row) :state))
              (assoc generated-cell :state 0)))) (flatten generated-cells)))
+
+(defn neighbours
+  [grid cell]
+  (filter #(neighbour? %1 cell) grid))
+
+(defn neighbour?
+  [potential-neighbour-cell cell]
+  (and (or
+    (= (cell :x) (- (potential-neighbour-cell :x) 1))
+    (= (cell :x) (potential-neighbour-cell :x))
+    (= (cell :x) (+ (potential-neighbour-cell :x) 1))
+    (= (cell :y) (- (potential-neighbour-cell :y) 1))
+    (= (cell :y) (potential-neighbour-cell :y))
+    (= (cell :y) (+ (potential-neighbour-cell :y) 1)))
+    (not= cell potential-neighbour-cell))
 
 (defn rendered-world
   [defined-cells world-dimensions]
