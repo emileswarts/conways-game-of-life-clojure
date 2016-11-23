@@ -6,18 +6,21 @@
   [& args]
   (println "Hello, World!"))
 
-(defn cell-state
-  [cell]
-  (let [live-neighbor-count (count (filter #(= 1 %) (cell :neighbors)))]
+(defn state-from-neighbours
+  [live-neighbor-count]
   (cond
     (< live-neighbor-count 2) 0
     (= live-neighbor-count 2) 1
     (= live-neighbor-count 3) 1
-    (> live-neighbor-count 3) 0)))
+    (> live-neighbor-count 3) 0))
+
+(defn cell-state
+  [cell cell-neighbours]
+  (state-from-neighbours (count (filter #(= (%1 :state) 1) cell-neighbours))))
 
 (defn tick-cell
-  [cell]
-  (assoc cell :state (cell-state cell)))
+  [cell grid]
+  (assoc cell :state (cell-state (neighbours cell grid) grid)))
 
 (defn x-rows
   [world-dimensions]
@@ -35,20 +38,20 @@
              (assoc generated-cell :state ((first row) :state))
              (assoc generated-cell :state 0)))) (flatten generated-cells)))
 
-(defn neighbours
-  [grid cell]
-  (filter #(neighbour? %1 cell) grid))
-
 (defn neighbour?
   [potential-neighbour-cell cell]
   (and (or
-    (= (cell :x) (- (potential-neighbour-cell :x) 1))
     (= (cell :x) (potential-neighbour-cell :x))
-    (= (cell :x) (+ (potential-neighbour-cell :x) 1))
-    (= (cell :y) (- (potential-neighbour-cell :y) 1))
     (= (cell :y) (potential-neighbour-cell :y))
+    (= (cell :x) (- (potential-neighbour-cell :x) 1))
+    (= (cell :y) (- (potential-neighbour-cell :y) 1))
+    (= (cell :x) (+ (potential-neighbour-cell :x) 1))
     (= (cell :y) (+ (potential-neighbour-cell :y) 1)))
-    (not= cell potential-neighbour-cell))
+    (not= cell potential-neighbour-cell)))
+
+(defn neighbours
+  [grid cell]
+  (filter #(neighbour? %1 cell) grid))
 
 (defn rendered-world
   [defined-cells world-dimensions]
