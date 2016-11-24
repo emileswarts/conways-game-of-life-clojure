@@ -10,11 +10,12 @@
                 {:x 2 :y 1 :state 0}]
           cell {:x 1 :y 2 :state 1}]
       (is (= 0 ((tick-cell cell grid) :state)))))
-  (testing "Dying: Too many neighbours"
+  (testing "Dying: More than 3 neighbours"
     (let [grid [{:x 1 :y 2 :state 1}
                 {:x 0 :y 1 :state 1}
                 {:x 1 :y 1 :state 1}
-                {:x 2 :y 1 :state 1}]
+                {:x 2 :y 1 :state 1}
+                {:x 1 :y 3 :state 1}]
           cell {:x 1 :y 2 :state 1}]
       (is (= 0 ((tick-cell cell grid) :state)))))
   (testing "Live: 2 neighbours"

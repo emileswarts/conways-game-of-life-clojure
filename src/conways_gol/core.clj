@@ -20,7 +20,7 @@
 
 (defn tick-cell
   [cell grid]
-  (assoc cell :state (cell-state (neighbours cell grid) grid)))
+  (assoc cell :state (cell-state cell (neighbours grid cell))))
 
 (defn x-rows
   [world-dimensions]
