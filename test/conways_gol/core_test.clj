@@ -3,13 +3,34 @@
             [conways-gol.core :refer :all]))
 
 (deftest cell-state-test
-  (testing "No live neighbours"
+  (testing "Dying: No live neighbours"
     (let [grid [{:x 1 :y 2 :state 1}
                 {:x 0 :y 1 :state 0}
                 {:x 1 :y 1 :state 0}
                 {:x 2 :y 1 :state 0}]
           cell {:x 1 :y 2 :state 1}]
-    (is (= 0 ((tick-cell cell grid) :state))))))
+      (is (= 0 ((tick-cell cell grid) :state)))))
+  (testing "Dying: Too many neighbours"
+    (let [grid [{:x 1 :y 2 :state 1}
+                {:x 0 :y 1 :state 1}
+                {:x 1 :y 1 :state 1}
+                {:x 2 :y 1 :state 1}]
+          cell {:x 1 :y 2 :state 1}]
+      (is (= 0 ((tick-cell cell grid) :state)))))
+  (testing "Live: 2 neighbours"
+    (let [grid [{:x 1 :y 2 :state 1}
+                {:x 0 :y 1 :state 1}
+                {:x 1 :y 1 :state 1}
+                {:x 2 :y 1 :state 0}]
+          cell {:x 1 :y 2 :state 1}]
+      (is (= 1 ((tick-cell cell grid) :state)))))
+  (testing "Live: 3 neighbours"
+    (let [grid [{:x 1 :y 2 :state 1}
+                {:x 0 :y 1 :state 1}
+                {:x 1 :y 1 :state 1}
+                {:x 2 :y 1 :state 1}]
+          cell {:x 1 :y 2 :state 1}]
+      (is (= 1 ((tick-cell cell grid) :state))))))
 
 (deftest rendered-world-test
   (testing "Render world grid"
