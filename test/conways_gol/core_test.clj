@@ -1,6 +1,7 @@
 (ns conways-gol.core-test
   (:require [clojure.test :refer :all]
-            [conways-gol.core :refer :all]))
+            [conways-gol.core :refer :all]
+            [conways-gol.console-renderer :refer :all]))
 
 (deftest cell-state-test
   (testing "Dying: No live neighbours"
@@ -74,3 +75,15 @@
                            {:x 2 :y 3}]
            cell {:x 1 :y 2}]
     (is (= cell-neighbours (neighbours grid cell))))))
+
+(deftest cell-neighbours-test
+  (testing "console-renderer"
+    (let [world [{:x 0 :y 0 :state 1}
+                 {:x 1 :y 0 :state 0}
+                 {:x 0 :y 1 :state 1}
+                 {:x 1 :y 1 :state 0} ]
+
+          world-dimensions {:x 2 :y 2}
+          expected-result "* . 
+* . \n\n"]
+    (is (= (render world world-dimensions) expected-result)))))
