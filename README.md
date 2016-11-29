@@ -7,7 +7,7 @@ Please submit a PR if you can spot any improvements.
 
 ## Installation
 
-lein deps
+`lein deps`
 
 ## Usage
 
