@@ -22,3 +22,6 @@ nnoremap <leader>x :silent !tmux send-keys -t 2 "(require '[clojure.test :refer 
 
 Once this is done you can run
 `(-main)` to start the game with the default Glider start position.
+
+
+![alt text](world.png "world")
