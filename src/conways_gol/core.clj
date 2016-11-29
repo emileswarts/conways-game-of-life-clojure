@@ -4,7 +4,7 @@
 
 (def dimensions {:x 15 :y 15})
 
-(defn state-from-neighbours
+(defn new-state
   [live-neighbour-count cell]
   (cond
     (< live-neighbour-count 2) 0
@@ -13,7 +13,7 @@
     (= live-neighbour-count 3) 1
     (> live-neighbour-count 3) 0))
 
-(defn cell-state [cell neighbours] (state-from-neighbours (count (filter #(= (%1 :state) 1) neighbours)) cell))
+(defn cell-state [cell neighbours] (new-state (count (filter #(= (%1 :state) 1) neighbours)) cell))
 
 (defn neighbour?
   [other-cell cell]
