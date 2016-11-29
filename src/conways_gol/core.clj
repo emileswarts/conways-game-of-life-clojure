@@ -1,12 +1,8 @@
 (ns conways-gol.core 
-  (:require [conways-gol.console-renderer :refer :all]))
+  (:require [conways-gol.console-renderer :refer :all]
+            [conways-gol.start-patterns :refer :all]))
 
-(def board-dimensions {:x 19 :y 19})
-(def glider [{:x 3 :y 2 :state 1}
-             {:x 4 :y 3 :state 1}
-             {:x 4 :y 4 :state 1}
-             {:x 3 :y 4 :state 1}
-             {:x 2 :y 4 :state 1}])
+(def board-dimensions {:x 25 :y 25})
 
 (defn state-from-neighbours
   [live-neighbour-count cell]
@@ -25,34 +21,17 @@
   [other-cell cell]
   (and
     (or 
-      (and 
-        (= (cell :y) (- (other-cell :y) 1))
-        (= (cell :x) (- (other-cell :x) 1)))
-      (and 
-        (= (cell :x) (other-cell :x))
-        (= (cell :y) (- (other-cell :y) 1)))
-      (and 
-        (= (cell :y) (other-cell :y))
-        (= (cell :x) (- (other-cell :x) 1)))
-      (and 
-        (= (cell :y) (other-cell :y))
-        (= (cell :x) (+ (other-cell :x) 1)))
-      (and 
-        (= (cell :x) (+ (other-cell :x) 1))
-        (= (cell :y) (- (other-cell :y) 1)))
-      (and 
-        (= (cell :x) (+ (other-cell :x) 1))
-        (= (cell :y) (+ (other-cell :y) 1)))
-      (and 
-        (= (cell :x) (other-cell :x))
-        (= (cell :y) (+ (other-cell :y) 1)))
-      (and 
-        (= (cell :y) (+ (other-cell :y) 1))
-        (= (cell :x) (- (other-cell :x) 1))))
+      (and (= (cell :y) (- (other-cell :y) 1)) (= (cell :x) (- (other-cell :x) 1)))
+      (and (= (cell :x) (other-cell :x)) (= (cell :y) (- (other-cell :y) 1)))
+      (and (= (cell :y) (other-cell :y)) (= (cell :x) (- (other-cell :x) 1)))
+      (and (= (cell :y) (other-cell :y)) (= (cell :x) (+ (other-cell :x) 1)))
+      (and (= (cell :x) (+ (other-cell :x) 1)) (= (cell :y) (- (other-cell :y) 1)))
+      (and (= (cell :x) (+ (other-cell :x) 1)) (= (cell :y) (+ (other-cell :y) 1)))
+      (and (= (cell :x) (other-cell :x)) (= (cell :y) (+ (other-cell :y) 1)))
+      (and (= (cell :y) (+ (other-cell :y) 1)) (= (cell :x) (- (other-cell :x) 1))))
     (not= cell other-cell)))
 
-(defn neighbours [grid cell] (vec (filter (fn [grid-item] 
-                                            (neighbour? grid-item cell)) grid)))
+(defn neighbours [grid cell] (vec (filter (fn [grid-item] (neighbour? grid-item cell)) grid)))
 
 (defn tick-cell [cell grid] (assoc cell :state (cell-state cell (neighbours grid cell))))
 
@@ -75,17 +54,13 @@
 (defn rendered-world
   [defined-cells world-dimensions]
   (with-existing-cells
-    (map (fn [y-row]
-           (map (fn [x]
-                  (assoc y-row :x x)) (take (world-dimensions :x) (range))))
+    (map (fn [y-row] (map (fn [x] (assoc y-row :x x)) (take (world-dimensions :x) (range))))
          (y-rows world-dimensions))
     defined-cells))
 
 (defn presentable
   [world]
-  (println (render world board-dimensions)) (Thread/sleep 100)
-  (presentable (rendered-world (map #(tick-cell %1 world) world) board-dimensions)))
+  (println (render world board-dimensions)) (Thread/sleep 50)
+  (recur (rendered-world (map #(tick-cell %1 world) world) board-dimensions)))
 
-(defn -main [& args]
-  (let [world (rendered-world glider board-dimensions)]
-    (presentable world)))
+(defn -main [& args] (let [world (rendered-world glider1 board-dimensions)] (presentable world)))
