@@ -2,7 +2,7 @@
   (:require [conways-gol.console-renderer :refer :all]
             [conways-gol.start-patterns :refer :all]))
 
-(def board-dimensions {:x 25 :y 25})
+(def dimensions {:x 15 :y 15})
 
 (defn state-from-neighbours
   [live-neighbour-count cell]
@@ -14,8 +14,8 @@
     (> live-neighbour-count 3) 0))
 
 (defn cell-state
-  [cell cell-neighbours]
-  (state-from-neighbours (count (filter #(= (%1 :state) 1) cell-neighbours)) cell))
+  [cell neighbours]
+  (state-from-neighbours (count (filter #(= (%1 :state) 1) neighbours)) cell))
 
 (defn neighbour?
   [other-cell cell]
@@ -31,13 +31,13 @@
       (and (= (cell :y) (+ (other-cell :y) 1)) (= (cell :x) (- (other-cell :x) 1))))
     (not= cell other-cell)))
 
-(defn neighbours [grid cell] (vec (filter (fn [grid-item] (neighbour? grid-item cell)) grid)))
+(defn neighbours [grid cell] (filter (fn [grid-item] (neighbour? grid-item cell)) grid))
 
 (defn tick-cell [cell grid] (assoc cell :state (cell-state cell (neighbours grid cell))))
 
 (defn y-rows
-  [world-dimensions]
-  (map (fn [y-row] (hash-map :y y-row)) (take (world-dimensions :y) (range))))
+  [dimensions]
+  (map (fn [y-row] (hash-map :y y-row)) (take (dimensions :y) (range))))
 
 (defn with-existing-cells
   [generated-cells defined-cells]
@@ -52,15 +52,15 @@
              (assoc generated-cell :state 0)))) (flatten generated-cells)))
 
 (defn rendered-world
-  [defined-cells world-dimensions]
+  [defined-cells dimensions]
   (with-existing-cells
-    (map (fn [y-row] (map (fn [x] (assoc y-row :x x)) (take (world-dimensions :x) (range))))
-         (y-rows world-dimensions))
+    (map (fn [y-row] (map (fn [x] (assoc y-row :x x)) (take (dimensions :x) (range))))
+         (y-rows dimensions))
     defined-cells))
 
 (defn presentable
   [world]
-  (println (render world board-dimensions)) (Thread/sleep 50)
-  (recur (rendered-world (map #(tick-cell %1 world) world) board-dimensions)))
+  (println (render world dimensions)) (Thread/sleep 50)
+  (recur (rendered-world (map #(tick-cell %1 world) world) dimensions)))
 
-(defn -main [& args] (let [world (rendered-world glider1 board-dimensions)] (presentable world)))
+(defn -main [] (let [world (rendered-world glider1 dimensions)] (presentable world)))
