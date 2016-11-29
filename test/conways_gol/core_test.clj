@@ -47,36 +47,94 @@
   (testing "3 neighbours"
     (let [grid [{:x 0 :y 0}
                 {:x 1 :y 0}
-                {:x 1 :y 1}
-                {:x 0 :y 1}]
+                {:x 0 :y 1}
+                {:x 1 :y 1}]
           cell-neighbours [{:x 1 :y 0}
-                           {:x 1 :y 1}
-                           {:x 0 :y 1}]
-           cell {:x 0 :y 0}]
-    (is (= cell-neighbours (neighbours grid cell)))))
+                           {:x 0 :y 1}
+                           {:x 1 :y 1}]
+          cell {:x 0 :y 0}]
+      (is (= cell-neighbours (neighbours grid cell)))))
+
+  (testing "neighbour top left"
+    (let [grid [{:x 0 :y 0}
+                {:x 1 :y 1}]
+          cell-neighbours [{:x 0 :y 0}]
+          cell {:x 1 :y 1}]
+      (is (= cell-neighbours (neighbours grid cell)))))
+
+  (testing "neighbour top"
+    (let [grid [{:x 1 :y 0}
+                {:x 1 :y 1}]
+          cell-neighbours [{:x 1 :y 0}]
+          cell {:x 1 :y 1}]
+      (is (= cell-neighbours (neighbours grid cell)))))
+
+  (testing "neighbour top right"
+    (let [grid [{:x 2 :y 0}
+                {:x 1 :y 1}]
+          cell-neighbours [{:x 2 :y 0}]
+          cell {:x 1 :y 1}]
+      (is (= cell-neighbours (neighbours grid cell)))))
+
+  (testing "neighbour right"
+    (let [grid [{:x 2 :y 1}
+                {:x 1 :y 1}]
+          cell-neighbours [{:x 2 :y 1}]
+          cell {:x 1 :y 1}]
+      (is (= cell-neighbours (neighbours grid cell)))))
+
+  (testing "neighbour bottom right"
+    (let [grid [{:x 2 :y 2}
+                {:x 1 :y 1}]
+          cell-neighbours [{:x 2 :y 2}]
+          cell {:x 1 :y 1}]
+      (is (= cell-neighbours (neighbours grid cell)))))
+
+  (testing "neighbour bottom"
+    (let [grid [{:x 1 :y 2}
+                {:x 1 :y 1}]
+          cell-neighbours [{:x 1 :y 2}]
+          cell {:x 1 :y 1}]
+      (is (= cell-neighbours (neighbours grid cell)))))
+
+  (testing "neighbour bottom left"
+    (let [grid [{:x 0 :y 2}
+                {:x 1 :y 1}]
+          cell-neighbours [{:x 0 :y 2}]
+          cell {:x 1 :y 1}]
+      (is (= cell-neighbours (neighbours grid cell)))))
+
+  (testing "neighbour left"
+    (let [grid [{:x 0 :y 1}
+                {:x 1 :y 1}]
+          cell-neighbours [{:x 0 :y 1}]
+          cell {:x 1 :y 1}]
+      (is (= cell-neighbours (neighbours grid cell)))))
+
+  )
 
   (testing "5 neighbours"
-    (let [grid [{:x 1 :y 2}
+    (let [grid [{:x 0 :y 0}
+                {:x 1 :y 0}
+                {:x 2 :y 0}
                 {:x 0 :y 1}
                 {:x 1 :y 1}
                 {:x 2 :y 1}
                 {:x 0 :y 2}
-                {:x 2 :y 2}
-                {:x 0 :y 3}
-                {:x 1 :y 3}
-                {:x 2 :y 3}]
-          cell-neighbours [{:x 0 :y 1}
-                           {:x 1 :y 1}
+                {:x 1 :y 2}
+                {:x 2 :y 2}]
+          cell-neighbours [{:x 0 :y 0}
+                           {:x 1 :y 0}
+                           {:x 2 :y 0}
+                           {:x 0 :y 1}
                            {:x 2 :y 1}
                            {:x 0 :y 2}
-                           {:x 2 :y 2}
-                           {:x 0 :y 3}
-                           {:x 1 :y 3}
-                           {:x 2 :y 3}]
-           cell {:x 1 :y 2}]
-    (is (= cell-neighbours (neighbours grid cell))))))
+                           {:x 1 :y 2}
+                           {:x 2 :y 2}]
+          cell {:x 1 :y 1}]
+      (is (= cell-neighbours (neighbours grid cell)))))
 
-(deftest cell-neighbours-test
+(deftest console-render-test
   (testing "console-renderer"
     (let [world [{:x 0 :y 0 :state 1}
                  {:x 1 :y 0 :state 0}

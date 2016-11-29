@@ -9,30 +9,50 @@
              {:x 2 :y 4 :state 1}])
 
 (defn state-from-neighbours
-  [live-neighbour-count]
+  [live-neighbour-count cell]
   (cond
     (< live-neighbour-count 2) 0
-    (= live-neighbour-count 2) 1
+    (= live-neighbour-count 2) 
+      (if (= (cell :state) 1) 1 0)
     (= live-neighbour-count 3) 1
     (> live-neighbour-count 3) 0))
 
 (defn cell-state
   [cell cell-neighbours]
-  (state-from-neighbours (count (filter #(= (%1 :state) 1) cell-neighbours))))
+  (state-from-neighbours (count (filter #(= (%1 :state) 1) cell-neighbours)) cell))
 
 (defn neighbour?
   [other-cell cell]
   (and
-    (and
-      (or (= (cell :x) (other-cell :x))
-          (= (cell :x) (- (other-cell :x) 1))
-          (= (cell :x) (+ (other-cell :x) 1)))
-      (or (= (cell :y) (other-cell :y))
-          (= (cell :y) (- (other-cell :y) 1))
-          (= (cell :y) (+ (other-cell :y) 1))))
+    (or 
+      (and 
+        (= (cell :y) (- (other-cell :y) 1))
+        (= (cell :x) (- (other-cell :x) 1)))
+      (and 
+        (= (cell :x) (other-cell :x))
+        (= (cell :y) (- (other-cell :y) 1)))
+      (and 
+        (= (cell :y) (other-cell :y))
+        (= (cell :x) (- (other-cell :x) 1)))
+      (and 
+        (= (cell :y) (other-cell :y))
+        (= (cell :x) (+ (other-cell :x) 1)))
+      (and 
+        (= (cell :x) (+ (other-cell :x) 1))
+        (= (cell :y) (- (other-cell :y) 1)))
+      (and 
+        (= (cell :x) (+ (other-cell :x) 1))
+        (= (cell :y) (+ (other-cell :y) 1)))
+      (and 
+        (= (cell :x) (other-cell :x))
+        (= (cell :y) (+ (other-cell :y) 1)))
+      (and 
+        (= (cell :y) (+ (other-cell :y) 1))
+        (= (cell :x) (- (other-cell :x) 1))))
     (not= cell other-cell)))
 
-(defn neighbours [grid cell] (filter #(neighbour? %1 cell) grid))
+(defn neighbours [grid cell] (vec (filter (fn [grid-item] 
+                                            (neighbour? grid-item cell)) grid)))
 
 (defn tick-cell [cell grid] (assoc cell :state (cell-state cell (neighbours grid cell))))
 
@@ -63,7 +83,7 @@
 
 (defn presentable
   [world]
-  (println (render world board-dimensions)) (Thread/sleep 1000)
+  (println (render world board-dimensions)) (Thread/sleep 100)
   (presentable (rendered-world (map #(tick-cell %1 world) world) board-dimensions)))
 
 (defn -main [& args]
