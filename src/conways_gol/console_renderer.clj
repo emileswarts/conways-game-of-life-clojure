@@ -13,8 +13,8 @@
         ". ")
     (= (cell :state) 1)
     (if (on-boundary? cell world-dimensions)
-      "* \n"
-      "* ")))
+      "🔥 \n"
+      "🔥 ")))
 
 (defn render
   [world world-dimensions]

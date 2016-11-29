@@ -142,6 +142,6 @@
                  {:x 1 :y 1 :state 0} ]
 
           world-dimensions {:x 2 :y 2}
-          expected-result "* . 
-* . \n\n"]
+          expected-result "🔥 . 
+🔥 . \n\n"]
     (is (= (render world world-dimensions) expected-result)))))

@@ -13,23 +13,19 @@
     (= live-neighbour-count 3) 1
     (> live-neighbour-count 3) 0))
 
-(defn cell-state
-  [cell neighbours]
-  (state-from-neighbours (count (filter #(= (%1 :state) 1) neighbours)) cell))
+(defn cell-state [cell neighbours] (state-from-neighbours (count (filter #(= (%1 :state) 1) neighbours)) cell))
 
 (defn neighbour?
   [other-cell cell]
-  (and
-    (or 
-      (and (= (cell :y) (- (other-cell :y) 1)) (= (cell :x) (- (other-cell :x) 1)))
-      (and (= (cell :x) (other-cell :x)) (= (cell :y) (- (other-cell :y) 1)))
-      (and (= (cell :y) (other-cell :y)) (= (cell :x) (- (other-cell :x) 1)))
-      (and (= (cell :y) (other-cell :y)) (= (cell :x) (+ (other-cell :x) 1)))
-      (and (= (cell :x) (+ (other-cell :x) 1)) (= (cell :y) (- (other-cell :y) 1)))
-      (and (= (cell :x) (+ (other-cell :x) 1)) (= (cell :y) (+ (other-cell :y) 1)))
-      (and (= (cell :x) (other-cell :x)) (= (cell :y) (+ (other-cell :y) 1)))
-      (and (= (cell :y) (+ (other-cell :y) 1)) (= (cell :x) (- (other-cell :x) 1))))
-    (not= cell other-cell)))
+  (and (or (and (= (cell :y) (- (other-cell :y) 1)) (= (cell :x) (- (other-cell :x) 1)))
+           (and (= (cell :x) (+ (other-cell :x) 1)) (= (cell :y) (- (other-cell :y) 1)))
+           (and (= (cell :x) (+ (other-cell :x) 1)) (= (cell :y) (+ (other-cell :y) 1)))
+           (and (= (cell :y) (+ (other-cell :y) 1)) (= (cell :x) (- (other-cell :x) 1)))
+           (and (= (cell :x) (other-cell :x)) (= (cell :y) (- (other-cell :y) 1)))
+           (and (= (cell :y) (other-cell :y)) (= (cell :x) (- (other-cell :x) 1)))
+           (and (= (cell :y) (other-cell :y)) (= (cell :x) (+ (other-cell :x) 1)))
+           (and (= (cell :x) (other-cell :x)) (= (cell :y) (+ (other-cell :y) 1))))
+       (not= cell other-cell)))
 
 (defn neighbours [grid cell] (filter (fn [grid-item] (neighbour? grid-item cell)) grid))
 
