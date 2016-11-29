@@ -1,7 +1,9 @@
 # Conways Game of Life Clojure
 
 I'm pretty new to Clojure and decided to try solve Conway's Game of Life in it.
-This was my first attempt without looking at any other implementations.
+This was my first attempt without looking at any other implementations!
+
+Please submit a PR if you can spot any improvements.
 
 ## Installation
 
