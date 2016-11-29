@@ -27,13 +27,11 @@
            (and (= (cell :x) (other-cell :x)) (= (cell :y) (+ (other-cell :y) 1))))
        (not= cell other-cell)))
 
-(defn neighbours [grid cell] (filter (fn [grid-item] (neighbour? grid-item cell)) grid))
+(defn neighbours [grid cell] (filter #(neighbour? % cell) grid))
 
 (defn tick-cell [cell grid] (assoc cell :state (cell-state cell (neighbours grid cell))))
 
-(defn y-rows
-  [dimensions]
-  (map (fn [y-row] (hash-map :y y-row)) (take (dimensions :y) (range))))
+(defn y-rows [dimensions] (map #(hash-map :y %) (take (dimensions :y) (range))))
 
 (defn with-existing-cells
   [generated-cells defined-cells]
@@ -50,7 +48,7 @@
 (defn rendered-world
   [defined-cells dimensions]
   (with-existing-cells
-    (map (fn [y-row] (map (fn [x] (assoc y-row :x x)) (take (dimensions :x) (range))))
+    (map (fn [y-row] (map #(assoc y-row :x %) (take (dimensions :x) (range))))
          (y-rows dimensions))
     defined-cells))
 
