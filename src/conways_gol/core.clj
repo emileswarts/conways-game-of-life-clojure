@@ -2,30 +2,27 @@
   (:require [conways-gol.console-renderer :refer :all]
             [conways-gol.start-patterns :refer :all]))
 
-(def dimensions {:x 15 :y 15})
-
 (defn new-state
   [live-neighbour-count cell]
   (cond
     (< live-neighbour-count 2) 0
-    (= live-neighbour-count 2) 
-      (if (= (cell :state) 1) 1 0)
+    (= live-neighbour-count 2) (if (= (cell :state) 1) 1 0)
     (= live-neighbour-count 3) 1
     (> live-neighbour-count 3) 0))
 
 (defn cell-state [cell neighbours] (new-state (count (filter #(= (%1 :state) 1) neighbours)) cell))
 
+(def neighbour-offsets
+  (let [digits (range -1 2)]
+    (for [x digits y digits :let [value [x y]] :when (not= value [0 0]) ] value)))
+
+(defn offset-match?
+  [axis cell other-cell]
+  (some #(= true %) (map #(= (+ (axis other-cell) (first %)) (axis cell)) neighbour-offsets)))
+
 (defn neighbour?
   [other-cell cell]
-  (and (or (and (= (cell :y) (- (other-cell :y) 1)) (= (cell :x) (- (other-cell :x) 1)))
-           (and (= (cell :x) (+ (other-cell :x) 1)) (= (cell :y) (- (other-cell :y) 1)))
-           (and (= (cell :x) (+ (other-cell :x) 1)) (= (cell :y) (+ (other-cell :y) 1)))
-           (and (= (cell :y) (+ (other-cell :y) 1)) (= (cell :x) (- (other-cell :x) 1)))
-           (and (= (cell :x) (other-cell :x)) (= (cell :y) (- (other-cell :y) 1)))
-           (and (= (cell :y) (other-cell :y)) (= (cell :x) (- (other-cell :x) 1)))
-           (and (= (cell :y) (other-cell :y)) (= (cell :x) (+ (other-cell :x) 1)))
-           (and (= (cell :x) (other-cell :x)) (= (cell :y) (+ (other-cell :y) 1))))
-       (not= cell other-cell)))
+  (and (offset-match? :x cell other-cell) (offset-match? :y cell other-cell) (not (= cell other-cell))))
 
 (defn neighbours [grid cell] (filter #(neighbour? % cell) grid))
 

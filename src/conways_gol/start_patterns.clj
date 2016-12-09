@@ -1,5 +1,7 @@
 (ns conways-gol.start-patterns) 
 
+(def dimensions {:x 15 :y 15})
+
 (def glider1 [{:x 2 :y 1 :state 1}
               {:x 3 :y 2 :state 1}
               {:x 3 :y 3 :state 1}

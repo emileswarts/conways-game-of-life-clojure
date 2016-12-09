@@ -145,3 +145,15 @@
           expected-result "🔥 . 
 🔥 . \n\n"]
     (is (= (render world world-dimensions) expected-result)))))
+
+(deftest neighbour-offsets-test
+  (testing "neighbour offsets"
+    (let [expected-result '([-1 -1]
+                            [-1 0]
+                            [-1 1]
+                            [0 -1]
+                            [0 1]
+                            [1 -1]
+                            [1 0]
+                            [1 1])]
+      (is (= neighbour-offsets expected-result)))))
